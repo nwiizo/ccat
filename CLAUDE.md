@@ -6,6 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is `ccat`, a command-line tool for analyzing and managing Claude Code memory files (CLAUDE.md). It's built in Rust and provides comprehensive analysis, diagnostics, and export capabilities for CLAUDE.md files across different scopes (user, project, subdirectory).
 
+## Installation
+
+### From crates.io (Recommended)
+```bash
+cargo install ccat
+```
+
+### From source
+```bash
+git clone https://github.com/nwiizo/ccat.git
+cd ccat
+cargo install --path .
+```
+
 ## Development Commands
 
 ### Essential Commands

@@ -14,11 +14,23 @@ A comprehensive command-line tool for analyzing and managing Claude Code memory 
 
 ## Installation
 
+### From crates.io (Recommended)
+
 ```bash
-cd tools/ccat
-cargo build --release
+cargo install ccat
+```
+
+### From source
+
+```bash
+git clone https://github.com/nwiizo/ccat.git
+cd ccat
 cargo install --path .
 ```
+
+### From GitHub releases
+
+Download the latest binary from the [releases page](https://github.com/nwiizo/ccat/releases).
 
 ## Usage
 
