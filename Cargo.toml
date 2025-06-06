@@ -1,6 +1,6 @@
 [package]
 name = "ccat"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["nwiizo"]
 description = "CLAUDE.md Context Analyzer - A comprehensive tool for analyzing and managing Claude Code memory files"
