@@ -58,11 +58,11 @@ impl ImportResolver {
         }
 
         // Check for cycles using DFS
-        for (path, _) in &import_graph {
+        for path in import_graph.keys() {
             let mut visited = HashSet::new();
             let mut stack = Vec::new();
 
-            if let Some(cycle) = self.find_cycle(path, &import_graph, &mut visited, &mut stack) {
+            if let Some(cycle) = Self::find_cycle(path, &import_graph, &mut visited, &mut stack) {
                 circular_imports.push(CircularImport {
                     cycle: cycle.clone(),
                 });
@@ -108,7 +108,6 @@ impl ImportResolver {
     }
 
     fn find_cycle(
-        &self,
         current: &Path,
         graph: &HashMap<PathBuf, Vec<PathBuf>>,
         visited: &mut HashSet<PathBuf>,
@@ -129,7 +128,7 @@ impl ImportResolver {
 
         if let Some(deps) = graph.get(current) {
             for dep in deps {
-                if let Some(cycle) = self.find_cycle(dep, graph, visited, stack) {
+                if let Some(cycle) = Self::find_cycle(dep, graph, visited, stack) {
                     return Some(cycle);
                 }
             }

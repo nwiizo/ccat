@@ -7,6 +7,12 @@ use termtree::Tree;
 
 pub struct TreeFormatter;
 
+impl Default for TreeFormatter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TreeFormatter {
     pub fn new() -> Self {
         Self

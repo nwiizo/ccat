@@ -10,6 +10,12 @@ pub struct TextFormatter {
     expand_imports: bool,
 }
 
+impl Default for TextFormatter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TextFormatter {
     pub fn new() -> Self {
         Self {

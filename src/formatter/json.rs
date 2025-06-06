@@ -7,6 +7,12 @@ pub struct JsonFormatter {
     pretty: bool,
 }
 
+impl Default for JsonFormatter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl JsonFormatter {
     pub fn new() -> Self {
         Self { pretty: true }
