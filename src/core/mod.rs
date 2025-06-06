@@ -1,11 +1,11 @@
-pub mod scanner;
+pub mod cache;
 pub mod parser;
 pub mod resolver;
-pub mod cache;
+pub mod scanner;
 
-use std::path::PathBuf;
-use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryFile {
@@ -18,10 +18,10 @@ pub struct MemoryFile {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum MemoryType {
-    ProjectMemory,      // ./CLAUDE.md
-    UserMemory,         // ~/.claude/CLAUDE.md
-    LocalMemory,        // ./CLAUDE.local.md (deprecated)
-    SubdirMemory,       // サブディレクトリのCLAUDE.md
+    ProjectMemory, // ./CLAUDE.md
+    UserMemory,    // ~/.claude/CLAUDE.md
+    LocalMemory,   // ./CLAUDE.local.md (deprecated)
+    SubdirMemory,  // サブディレクトリのCLAUDE.md
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -39,7 +39,7 @@ pub struct FileMetadata {
     pub line_count: usize,
 }
 
-pub use scanner::Scanner;
+pub use cache::FileCache;
 pub use parser::Parser;
 pub use resolver::ImportResolver;
-pub use cache::FileCache;
+pub use scanner::Scanner;

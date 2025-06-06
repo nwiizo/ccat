@@ -2,8 +2,8 @@ use super::Formatter;
 use crate::core::{MemoryFile, MemoryType};
 use anyhow::Result;
 use colored::Colorize;
-use termtree::Tree;
 use std::path::Path;
+use termtree::Tree;
 
 pub struct TreeFormatter;
 
@@ -53,13 +53,13 @@ impl Formatter for TreeFormatter {
         // Add subdir memories
         if !subdir_files.is_empty() {
             let mut subdir_node = Tree::new("Subdirectory Memories".cyan().to_string());
-            
+
             // Build directory tree
             for file in subdir_files {
                 let relative_path = file.path.strip_prefix(".").unwrap_or(&file.path);
                 add_to_tree(&mut subdir_node, relative_path, file);
             }
-            
+
             root.push(subdir_node);
         }
 
@@ -82,7 +82,9 @@ fn format_file_node(file: &MemoryFile) -> Tree<String> {
     let imports_info = if file.imports.is_empty() {
         String::new()
     } else {
-        format!(" [{} imports]", file.imports.len()).dimmed().to_string()
+        format!(" [{} imports]", file.imports.len())
+            .dimmed()
+            .to_string()
     };
 
     let info = format!(
@@ -97,7 +99,8 @@ fn format_file_node(file: &MemoryFile) -> Tree<String> {
 }
 
 fn add_to_tree(tree: &mut Tree<String>, path: &Path, file: &MemoryFile) {
-    let components: Vec<_> = path.parent()
+    let components: Vec<_> = path
+        .parent()
         .unwrap_or(Path::new(""))
         .components()
         .collect();
@@ -112,26 +115,34 @@ fn add_to_tree(tree: &mut Tree<String>, path: &Path, file: &MemoryFile) {
     for component in components {
         path_components.push(component.as_os_str().to_string_lossy().to_string());
     }
-    
+
     // Navigate or create the path
-    fn ensure_path<'a>(tree: &'a mut Tree<String>, path: &[String], depth: usize) -> &'a mut Tree<String> {
+    fn ensure_path<'a>(
+        tree: &'a mut Tree<String>,
+        path: &[String],
+        depth: usize,
+    ) -> &'a mut Tree<String> {
         if depth >= path.len() {
             return tree;
         }
-        
+
         let name = &path[depth];
-        
+
         // Find or create child
         let child_idx = tree.leaves.iter().position(|child| &child.root == name);
-        
+
         if child_idx.is_none() {
             tree.push(Tree::new(name.clone()));
         }
-        
-        let child_idx = tree.leaves.iter().position(|child| &child.root == name).unwrap();
+
+        let child_idx = tree
+            .leaves
+            .iter()
+            .position(|child| &child.root == name)
+            .unwrap();
         ensure_path(&mut tree.leaves[child_idx], path, depth + 1)
     }
-    
+
     let target = ensure_path(tree, &path_components, 0);
     target.push(format_file_node(file));
 }

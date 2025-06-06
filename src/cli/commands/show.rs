@@ -1,7 +1,7 @@
 use crate::cli::args::{ShowArgs, ShowFormat};
-use crate::core::{Scanner, Parser, MemoryType};
-use crate::formatter::{Formatter, TextFormatter, JsonFormatter, TreeFormatter};
-use anyhow::{Result, Context};
+use crate::core::{MemoryType, Parser, Scanner};
+use crate::formatter::{Formatter, JsonFormatter, TextFormatter, TreeFormatter};
+use anyhow::{Context, Result};
 use colored::Colorize;
 
 pub fn execute(args: ShowArgs) -> Result<()> {
@@ -9,7 +9,8 @@ pub fn execute(args: ShowArgs) -> Result<()> {
         .with_subdirs(args.include_subdirs)
         .with_max_depth(args.max_depth);
 
-    let mut files = scanner.scan(&args.path)
+    let mut files = scanner
+        .scan(&args.path)
         .context("Failed to scan for CLAUDE.md files")?;
 
     // Filter by type if specified
@@ -33,7 +34,7 @@ pub fn execute(args: ShowArgs) -> Result<()> {
     // Parse files if needed
     let parser = Parser::new();
     let mut parsed_files = Vec::new();
-    
+
     for file in &files {
         let parsed = parser.parse(file)?;
         parsed_files.push((file, parsed));

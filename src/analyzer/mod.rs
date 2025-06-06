@@ -1,9 +1,9 @@
 pub mod diagnostics;
-pub mod validator;
-pub mod security;
 pub mod profiler;
+pub mod security;
+pub mod validator;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DiagnosticResult {

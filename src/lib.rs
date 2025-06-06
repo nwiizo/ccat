@@ -1,11 +1,11 @@
+pub mod analyzer;
+pub mod claude;
 pub mod cli;
 pub mod core;
-pub mod analyzer;
 pub mod formatter;
-pub mod claude;
 
-pub use core::{MemoryFile, MemoryType, Scanner, Parser};
 pub use analyzer::{DiagnosticResult, Diagnostics};
+pub use core::{MemoryFile, MemoryType, Parser, Scanner};
 pub use formatter::Formatter;
 
 use anyhow::Result;

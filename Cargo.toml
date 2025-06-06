@@ -31,7 +31,7 @@ lru = "0.12"
 sha2 = "0.10"
 chrono = { version = "0.4", features = ["serde"] }
 log = "0.4"
-env_logger = "0.11"
+env_logger = "0.10"
 notify = "6.1"
 similar = "2.6"
 syntect = "5.2"

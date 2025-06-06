@@ -29,25 +29,25 @@ pub struct Cli {
 pub enum Commands {
     #[command(about = "Display memory files (default)")]
     Show(args::ShowArgs),
-    
+
     #[command(about = "Run diagnostics on configuration")]
     Diagnose(args::DiagnoseArgs),
-    
+
     #[command(about = "Search within context")]
     Search(args::SearchArgs),
-    
+
     #[command(about = "Show differences between files")]
     Diff(args::DiffArgs),
-    
+
     #[command(about = "Watch for changes")]
     Watch(args::WatchArgs),
-    
+
     #[command(about = "Export context to various formats")]
     Export(args::ExportArgs),
-    
+
     #[command(about = "Validate configuration")]
     Validate(args::ValidateArgs),
-    
+
     #[command(about = "Initialize a new CLAUDE.md file")]
     Init(args::InitArgs),
 }

@@ -1,10 +1,10 @@
 use anyhow::Result;
 use lru::LruCache;
-use std::path::{Path, PathBuf};
+use sha2::{Digest, Sha256};
 use std::fs;
-use std::time::SystemTime;
 use std::num::NonZeroUsize;
-use sha2::{Sha256, Digest};
+use std::path::{Path, PathBuf};
+use std::time::SystemTime;
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct CacheKey {
@@ -17,7 +17,7 @@ impl CacheKey {
     pub fn from_path<P: AsRef<Path>>(path: P) -> Result<Self> {
         let path = path.as_ref();
         let metadata = fs::metadata(path)?;
-        
+
         Ok(Self {
             path: path.to_path_buf(),
             modified: metadata.modified()?,
@@ -84,7 +84,7 @@ impl ContentHashCache {
 
     pub fn get_or_compute<P: AsRef<Path>>(&mut self, path: P) -> Result<String> {
         let path = path.as_ref();
-        
+
         if let Some(hash) = self.hash_cache.get(&path.to_path_buf()) {
             return Ok(hash.clone());
         }

@@ -1,4 +1,4 @@
-use super::{DiagnosticResult, Diagnostic, DiagnosticLevel, PerformanceMetrics};
+use super::{Diagnostic, DiagnosticLevel, DiagnosticResult, PerformanceMetrics};
 use crate::core::MemoryFile;
 use anyhow::Result;
 
@@ -51,7 +51,7 @@ impl Diagnostics {
         let metrics = PerformanceMetrics {
             total_files: files.len(),
             total_size: files.iter().map(|f| f.metadata.size).sum(),
-            import_depth: 0, // TODO: Calculate actual import depth
+            import_depth: 0,     // TODO: Calculate actual import depth
             circular_imports: 0, // TODO: Detect circular imports
         };
 

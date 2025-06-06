@@ -51,7 +51,10 @@ impl TextFormatter {
             "  Size: {} | Lines: {} | Modified: {} | Hash: {}",
             format_size(meta.size).dimmed(),
             meta.line_count.to_string().dimmed(),
-            meta.modified.format("%Y-%m-%d %H:%M:%S").to_string().dimmed(),
+            meta.modified
+                .format("%Y-%m-%d %H:%M:%S")
+                .to_string()
+                .dimmed(),
             &meta.hash[..8].dimmed()
         )
     }
@@ -70,9 +73,7 @@ impl TextFormatter {
             };
             output.push_str(&format!(
                 "    {} {} (line {})\n",
-                status,
-                import.path,
-                import.line_number
+                status, import.path, import.line_number
             ));
         }
         output
@@ -92,7 +93,7 @@ impl Formatter for TextFormatter {
             // Header
             if !self.content_only {
                 writeln!(handle, "{}", self.format_header(file))?;
-                
+
                 if self.show_metadata {
                     writeln!(handle, "{}", self.format_metadata(file))?;
                 }
@@ -110,7 +111,9 @@ impl Formatter for TextFormatter {
             } else {
                 // Add line numbers
                 for (line_no, line) in file.content.lines().enumerate() {
-                    writeln!(handle, "{:4} │ {}", 
+                    writeln!(
+                        handle,
+                        "{:4} │ {}",
                         (line_no + 1).to_string().dimmed(),
                         line
                     )?;

@@ -1,8 +1,8 @@
 use super::MemoryFile;
-use anyhow::{Result, bail};
-use std::path::{Path, PathBuf};
+use anyhow::{bail, Result};
 use std::collections::{HashMap, HashSet};
 use std::fs;
+use std::path::{Path, PathBuf};
 
 pub struct ImportResolver {
     base_path: PathBuf,
@@ -21,7 +21,9 @@ impl ImportResolver {
     }
 
     pub fn resolve_imports(&mut self, file: &mut MemoryFile) -> Result<()> {
-        let file_dir = file.path.parent()
+        let file_dir = file
+            .path
+            .parent()
             .ok_or_else(|| anyhow::anyhow!("Invalid file path"))?;
 
         for import in &mut file.imports {
@@ -59,7 +61,7 @@ impl ImportResolver {
         for (path, _) in &import_graph {
             let mut visited = HashSet::new();
             let mut stack = Vec::new();
-            
+
             if let Some(cycle) = self.find_cycle(path, &import_graph, &mut visited, &mut stack) {
                 circular_imports.push(CircularImport {
                     cycle: cycle.clone(),
@@ -70,7 +72,11 @@ impl ImportResolver {
         Ok(circular_imports)
     }
 
-    fn resolve_import_path(&mut self, import_path: &str, base_dir: &Path) -> Result<Option<PathBuf>> {
+    fn resolve_import_path(
+        &mut self,
+        import_path: &str,
+        base_dir: &Path,
+    ) -> Result<Option<PathBuf>> {
         // Check cache
         if let Some(cached) = self.resolved_cache.get(import_path) {
             return Ok(Some(cached.clone()));
@@ -92,7 +98,8 @@ impl ImportResolver {
         for candidate in candidates {
             if candidate.exists() && candidate.is_file() {
                 let canonical = candidate.canonicalize()?;
-                self.resolved_cache.insert(import_path.to_string(), canonical.clone());
+                self.resolved_cache
+                    .insert(import_path.to_string(), canonical.clone());
                 return Ok(Some(canonical));
             }
         }

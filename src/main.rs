@@ -1,13 +1,13 @@
 use anyhow::Result;
-use clap::Parser;
 use ccat::cli::{Cli, Commands};
+use clap::Parser;
 use env_logger::Env;
 
 fn main() -> Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
-    
+
     let cli = Cli::parse();
-    
+
     match cli.command {
         Some(Commands::Show(args)) => ccat::cli::commands::show::execute(args),
         Some(Commands::Diagnose(args)) => ccat::cli::commands::diagnose::execute(args),

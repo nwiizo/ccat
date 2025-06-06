@@ -1,16 +1,12 @@
-use super::{MemoryFile, Import};
+use super::{Import, MemoryFile};
 use anyhow::Result;
-use regex::Regex;
 use once_cell::sync::Lazy;
+use regex::Regex;
 use std::collections::HashMap;
 
-static IMPORT_REGEX: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"\{\{import\s+([^\}]+)\}\}").unwrap()
-});
+static IMPORT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{import\s+([^\}]+)\}\}").unwrap());
 
-static SECTION_REGEX: Lazy<Regex> = Lazy::new(|| {
-    Regex::new(r"^#+\s+(.+)$").unwrap()
-});
+static SECTION_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^#+\s+(.+)$").unwrap());
 
 #[derive(Debug, Clone)]
 pub struct ParsedContent {
@@ -138,7 +134,7 @@ impl Parser {
     fn count_links(&self, line: &str) -> usize {
         let markdown_link = Regex::new(r"\[([^\]]+)\]\(([^\)]+)\)").unwrap();
         let url_link = Regex::new(r"https?://[^\s]+").unwrap();
-        
+
         markdown_link.find_iter(line).count() + url_link.find_iter(line).count()
     }
 
@@ -154,12 +150,9 @@ impl Parser {
             if line.trim().eq("---") {
                 break;
             }
-            
+
             if let Some((key, value)) = line.split_once(':') {
-                frontmatter.insert(
-                    key.trim().to_string(),
-                    value.trim().to_string()
-                );
+                frontmatter.insert(key.trim().to_string(), value.trim().to_string());
             }
         }
 
