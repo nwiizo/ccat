@@ -1,0 +1,154 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: ccat
+            release_name: ccat-linux-x86_64
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            artifact_name: ccat
+            release_name: ccat-linux-x86_64-musl
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: ccat.exe
+            release_name: ccat-windows-x86_64.exe
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: ccat
+            release_name: ccat-macos-x86_64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: ccat
+            release_name: ccat-macos-aarch64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.target }}
+
+    - name: Install musl tools
+      if: matrix.target == 'x86_64-unknown-linux-musl'
+      run: sudo apt-get install -y musl-tools
+
+    - name: Cache cargo registry
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/registry
+        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo index
+      uses: actions/cache@v4
+      with:
+        path: ~/.cargo/git
+        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Cache cargo build
+      uses: actions/cache@v4
+      with:
+        path: target
+        key: ${{ runner.os }}-${{ matrix.target }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Build
+      run: cargo build --release --target ${{ matrix.target }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.release_name }}
+        path: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          ccat-linux-x86_64/ccat
+          ccat-linux-x86_64-musl/ccat
+          ccat-windows-x86_64.exe/ccat.exe
+          ccat-macos-x86_64/ccat
+          ccat-macos-aarch64/ccat
+        body: |
+          ## ccat ${{ github.ref_name }}
+
+          CLAUDE.md Context Analyzer - A comprehensive tool for analyzing and managing Claude Code memory files.
+
+          ### Installation
+
+          #### Quick install via curl
+          ```bash
+          # Linux x86_64
+          curl -L https://github.com/nwiizo/ccat/releases/download/${{ github.ref_name }}/ccat-linux-x86_64 -o ccat
+          chmod +x ccat
+          sudo mv ccat /usr/local/bin/
+
+          # macOS x86_64
+          curl -L https://github.com/nwiizo/ccat/releases/download/${{ github.ref_name }}/ccat-macos-x86_64 -o ccat
+          chmod +x ccat
+          sudo mv ccat /usr/local/bin/
+
+          # macOS ARM64 (Apple Silicon)
+          curl -L https://github.com/nwiizo/ccat/releases/download/${{ github.ref_name }}/ccat-macos-aarch64 -o ccat
+          chmod +x ccat
+          sudo mv ccat /usr/local/bin/
+          ```
+
+          #### Via Cargo
+          ```bash
+          cargo install --git https://github.com/nwiizo/ccat
+          ```
+
+          ### Usage
+          ```bash
+          # Show CLAUDE.md files
+          ccat
+
+          # Tree view
+          ccat show -f tree
+
+          # JSON output
+          ccat show -f json
+
+          # Run diagnostics
+          ccat diagnose
+
+          # Search content
+          ccat search "TODO"
+          ```
+
+          ### Features
+          - 🔍 Smart file discovery
+          - 📊 Multiple output formats
+          - 🔗 Import resolution
+          - 🏥 Diagnostics
+          - 🔎 Context search
+          - 📦 Export capabilities
+
+          See the [README](https://github.com/nwiizo/ccat/blob/main/README.md) for full documentation.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

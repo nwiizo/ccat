@@ -1,0 +1,79 @@
+[package]
+name = "ccat"
+version = "0.1.0"
+edition = "2021"
+authors = ["nwiizo"]
+description = "CLAUDE.md Context Analyzer - A comprehensive tool for analyzing and managing Claude Code memory files"
+license = "MIT"
+repository = "https://github.com/nwiizo/ccat"
+homepage = "https://github.com/nwiizo/ccat"
+documentation = "https://docs.rs/ccat"
+keywords = ["claude", "cli", "analyzer", "developer-tools"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+clap = { version = "4.5", features = ["derive", "env"] }
+anyhow = "1.0"
+thiserror = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+toml = "0.8"
+rayon = "1.10"
+walkdir = "2.5"
+regex = "1.11"
+colored = "2.1"
+atty = "0.2"
+dirs = "5.0"
+indicatif = "0.17"
+once_cell = "1.20"
+lru = "0.12"
+sha2 = "0.10"
+chrono = { version = "0.4", features = ["serde"] }
+log = "0.4"
+env_logger = "0.11"
+notify = "6.1"
+similar = "2.6"
+syntect = "5.2"
+termtree = "0.5"
+tabled = "0.16"
+which = "7.0"
+
+[dev-dependencies]
+tempfile = "3.14"
+assert_cmd = "2.0"
+predicates = "3.1"
+criterion = "0.5"
+insta = "1.41"
+proptest = "1.6"
+
+[build-dependencies]
+built = { version = "0.7", features = ["git2"] }
+
+[[bin]]
+name = "ccat"
+path = "src/main.rs"
+
+[lib]
+name = "ccat"
+path = "src/lib.rs"
+
+[[bench]]
+name = "parser"
+harness = false
+
+[[bench]]
+name = "scanner"
+harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+opt-level = 3
+
+[profile.dev]
+opt-level = 0
+
+[profile.test]
+opt-level = 2

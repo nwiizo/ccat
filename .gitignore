@@ -1,0 +1,38 @@
+# Rust
+/target/
+**/*.rs.bk
+*.pdb
+Cargo.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Generated files
+/doc/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Local configuration
+.env
+.env.local
+
+# Test artifacts
+*.profraw
